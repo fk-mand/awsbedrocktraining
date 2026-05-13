@@ -1,0 +1,2351 @@
+<div id="app-root"></div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  :root {
+    --bg: #faf6ed;
+    --bg-elev: #fefcf7;
+    --bg-deep: #f0e9d8;
+    --ink: #1a1614;
+    --ink-soft: #3d362f;
+    --muted: #756b5e;
+    --muted-soft: #a8a094;
+    --rule: #d9d0bd;
+    --accent: #d2542a;
+    --accent-soft: #f4d9c8;
+    --accent-dark: #a3401f;
+    --teal: #1f4d4a;
+    --teal-soft: #d4e2e0;
+    --success: #2d6a3e;
+    --success-soft: #d6e8d9;
+    --danger: #a83333;
+    --danger-soft: #f1d5d5;
+    --serif: 'Fraunces', Georgia, serif;
+    --sans: 'Instrument Sans', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', 'Courier New', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body, #app-root {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .training-wrap {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    min-height: 100vh;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  /* ====== SIDEBAR ====== */
+  .sidebar {
+    background: var(--bg-deep);
+    border-right: 1px solid var(--rule);
+    padding: 32px 28px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .brand {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 4px;
+    font-variation-settings: "opsz" 144;
+  }
+
+  .brand .accent { color: var(--accent); font-style: italic; }
+
+  .brand-sub {
+    font-family: var(--sans);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+
+  .progress-panel {
+    background: var(--bg-elev);
+    border: 1px solid var(--rule);
+    padding: 16px;
+    margin-bottom: 28px;
+  }
+
+  .progress-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .progress-stat {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 1;
+    margin-bottom: 10px;
+    font-variation-settings: "opsz" 144;
+  }
+
+  .progress-stat .total {
+    color: var(--muted-soft);
+    font-size: 18px;
+  }
+
+  .progress-bar {
+    height: 4px;
+    background: var(--rule);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.4s ease;
+  }
+
+  .module-nav-title {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  .module-list {
+    list-style: none;
+    margin: 0 -10px;
+  }
+
+  .module-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 11px 10px;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: all 0.15s ease;
+    margin-bottom: 2px;
+  }
+
+  .module-item:hover {
+    background: var(--bg-elev);
+  }
+
+  .module-item.active {
+    border-left-color: var(--accent);
+    background: var(--bg-elev);
+  }
+
+  .module-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    padding-top: 2px;
+    min-width: 24px;
+  }
+
+  .module-item.active .module-num,
+  .module-item.complete .module-num {
+    color: var(--accent);
+  }
+
+  .module-label {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    line-height: 1.35;
+  }
+
+  .module-status {
+    font-size: 14px;
+    padding-top: 1px;
+  }
+
+  .module-item.complete .module-status::before {
+    content: "●";
+    color: var(--success);
+  }
+
+  /* ====== MAIN CONTENT ====== */
+  .main {
+    padding: 64px 80px 120px;
+    max-width: 920px;
+  }
+
+  .module-header {
+    margin-bottom: 48px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .module-eyebrow {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--accent);
+    margin-bottom: 16px;
+    font-weight: 600;
+  }
+
+  .module-title {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 56px;
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    margin-bottom: 20px;
+    color: var(--ink);
+    font-variation-settings: "opsz" 144;
+  }
+
+  .module-title .italic { font-style: italic; font-weight: 400; }
+
+  .module-lede {
+    font-family: var(--serif);
+    font-size: 20px;
+    line-height: 1.4;
+    color: var(--ink-soft);
+    max-width: 680px;
+    font-weight: 300;
+    font-variation-settings: "opsz" 144;
+  }
+
+  .module-meta {
+    display: flex;
+    gap: 32px;
+    margin-top: 24px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .module-meta span strong {
+    color: var(--ink);
+    font-weight: 600;
+    font-family: var(--mono);
+  }
+
+  .section {
+    margin-bottom: 56px;
+  }
+
+  .section-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+
+  .section-title {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    margin-bottom: 20px;
+    font-variation-settings: "opsz" 60;
+  }
+
+  .section-title.objectives::before { content: "◆  "; color: var(--accent); }
+  .section-title.video::before { content: "▶  "; color: var(--accent); }
+  .section-title.concept::before { content: "✱  "; color: var(--accent); }
+  .section-title.quiz::before { content: "?  "; color: var(--accent); font-weight: 700; }
+  .section-title.homework::before { content: "▣  "; color: var(--accent); }
+
+  .prose p {
+    margin-bottom: 16px;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+
+  .prose strong { color: var(--ink); font-weight: 600; }
+  .prose em { font-style: italic; }
+
+  .prose ul, .prose ol {
+    margin: 0 0 20px 24px;
+    color: var(--ink-soft);
+  }
+
+  .prose li {
+    margin-bottom: 8px;
+    font-size: 16px;
+    line-height: 1.65;
+  }
+
+  .objective-list {
+    background: var(--bg-elev);
+    border: 1px solid var(--rule);
+    padding: 24px 28px;
+    list-style: none;
+    margin-left: 0 !important;
+  }
+
+  .objective-list li {
+    padding-left: 28px;
+    position: relative;
+    margin-bottom: 12px;
+  }
+
+  .objective-list li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .objective-list li:last-child { margin-bottom: 0; }
+
+  /* Code blocks */
+  .code-block {
+    background: #1f1a17;
+    color: #ebe5d9;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.65;
+    padding: 20px 24px;
+    margin: 20px 0;
+    overflow-x: auto;
+    border-radius: 2px;
+    position: relative;
+  }
+
+  .code-block::before {
+    content: attr(data-lang);
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #8a7f72;
+  }
+
+  .code-block .k { color: #e89c63; }
+  .code-block .s { color: #a3c4a8; }
+  .code-block .c { color: #7a716a; font-style: italic; }
+  .code-block .n { color: #d4a5d9; }
+
+  code.inline {
+    font-family: var(--mono);
+    font-size: 14px;
+    background: var(--bg-deep);
+    padding: 2px 7px;
+    border-radius: 2px;
+    color: var(--accent-dark);
+  }
+
+  /* Video embed */
+  .video-wrap {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    background: #1a1614;
+    margin: 20px 0;
+    border: 1px solid var(--rule);
+  }
+
+  .video-wrap iframe {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    border: 0;
+  }
+
+  .video-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: 24px 0 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .video-title {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 500;
+    font-variation-settings: "opsz" 60;
+  }
+
+  .video-info {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  .video-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 1px solid var(--accent-soft);
+    padding-bottom: 2px;
+    margin-top: 8px;
+  }
+
+  .video-link:hover { border-bottom-color: var(--accent); }
+
+  .resource-list {
+    background: var(--teal-soft);
+    border-left: 3px solid var(--teal);
+    padding: 18px 24px;
+    margin: 24px 0;
+  }
+
+  .resource-list-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--teal);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .resource-list a {
+    color: var(--teal);
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+  }
+
+  .resource-list ul { list-style: none; margin: 0 !important; }
+  .resource-list li { font-size: 14px; margin-bottom: 6px; color: var(--ink-soft); }
+
+  /* Quiz */
+  .quiz {
+    background: var(--bg-elev);
+    border: 1px solid var(--rule);
+    padding: 32px;
+    margin-top: 24px;
+  }
+
+  .quiz-question {
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .quiz-question:last-of-type { border-bottom: 0; margin-bottom: 16px; padding-bottom: 0; }
+
+  .quiz-q-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    margin-bottom: 8px;
+  }
+
+  .quiz-q-text {
+    font-family: var(--serif);
+    font-size: 19px;
+    line-height: 1.35;
+    margin-bottom: 18px;
+    font-weight: 500;
+    font-variation-settings: "opsz" 60;
+  }
+
+  .quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .quiz-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--bg);
+    border: 1px solid var(--rule);
+    cursor: pointer;
+    font-size: 15px;
+    color: var(--ink-soft);
+    transition: all 0.15s ease;
+    text-align: left;
+    font-family: inherit;
+    width: 100%;
+  }
+
+  .quiz-option:hover:not(:disabled) {
+    background: var(--bg-deep);
+    border-color: var(--muted-soft);
+  }
+
+  .quiz-option.selected {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .quiz-option.correct {
+    border-color: var(--success);
+    background: var(--success-soft);
+    color: var(--ink);
+  }
+
+  .quiz-option.incorrect {
+    border-color: var(--danger);
+    background: var(--danger-soft);
+    color: var(--ink);
+  }
+
+  .quiz-option .opt-letter {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    min-width: 18px;
+    padding-top: 2px;
+  }
+
+  .quiz-option.correct .opt-letter { color: var(--success); }
+  .quiz-option.incorrect .opt-letter { color: var(--danger); }
+
+  .quiz-explain {
+    margin-top: 12px;
+    padding: 12px 14px;
+    background: var(--bg-deep);
+    border-left: 2px solid var(--accent);
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    display: none;
+  }
+
+  .quiz-explain.show { display: block; }
+
+  .quiz-explain strong { color: var(--ink); display: block; margin-bottom: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; }
+
+  .quiz-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+  }
+
+  .quiz-score {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--ink);
+    font-variation-settings: "opsz" 60;
+  }
+
+  .quiz-score.pass { color: var(--success); }
+  .quiz-score.fail { color: var(--danger); }
+
+  /* Homework */
+  .homework {
+    background: var(--bg-elev);
+    border: 1px solid var(--rule);
+    padding: 32px;
+    margin-top: 24px;
+    position: relative;
+  }
+
+  .homework-tag {
+    display: inline-block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 4px 10px;
+    margin-bottom: 16px;
+    font-weight: 600;
+  }
+
+  .homework-title {
+    font-family: var(--serif);
+    font-size: 22px;
+    line-height: 1.25;
+    margin-bottom: 16px;
+    font-weight: 500;
+    font-variation-settings: "opsz" 60;
+  }
+
+  .homework-steps {
+    counter-reset: hw-step;
+    list-style: none;
+    margin: 16px 0 !important;
+  }
+
+  .homework-steps li {
+    counter-increment: hw-step;
+    padding: 12px 0 12px 44px;
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+
+  .homework-steps li:last-child { border-bottom: 0; }
+
+  .homework-steps li::before {
+    content: counter(hw-step, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    top: 12px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .homework-hint {
+    margin-top: 16px;
+  }
+
+  .homework-hint summary {
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--teal);
+    font-weight: 600;
+    padding: 8px 0;
+    user-select: none;
+  }
+
+  .homework-hint summary:hover { color: var(--accent); }
+
+  .homework-hint[open] summary { margin-bottom: 12px; }
+
+  .homework-complete {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+  }
+
+  /* Buttons */
+  .btn {
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 11px 22px;
+    border: 1px solid var(--ink);
+    background: var(--ink);
+    color: var(--bg);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    letter-spacing: 0.02em;
+  }
+
+  .btn:hover { background: var(--accent); border-color: var(--accent); }
+
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn:disabled:hover { background: var(--ink); border-color: var(--ink); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--ink);
+  }
+
+  .btn-ghost:hover {
+    background: var(--ink);
+    color: var(--bg);
+  }
+
+  .btn-small { padding: 7px 14px; font-size: 12px; }
+
+  .nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 64px;
+    padding-top: 32px;
+    border-top: 1px solid var(--rule);
+  }
+
+  .nav-btn {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: var(--ink);
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: inherit;
+    text-align: left;
+    padding: 8px 0;
+  }
+
+  .nav-btn.disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .nav-btn-eyebrow {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .nav-btn-title {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 500;
+    font-variation-settings: "opsz" 60;
+  }
+
+  .nav-btn:not(.disabled):hover .nav-btn-title { color: var(--accent); }
+  .nav-btn.right { text-align: right; }
+
+  /* Hero / Welcome */
+  .hero {
+    background: linear-gradient(135deg, var(--bg-deep) 0%, var(--bg-elev) 100%);
+    border: 1px solid var(--rule);
+    padding: 64px 56px;
+    margin-bottom: 56px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 240px;
+    height: 240px;
+    background: var(--accent);
+    border-radius: 50%;
+    opacity: 0.08;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--accent);
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+
+  .hero h1 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 72px;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin-bottom: 28px;
+    font-variation-settings: "opsz" 144;
+  }
+
+  .hero h1 .italic { font-style: italic; font-weight: 400; color: var(--accent); }
+
+  .hero p {
+    font-family: var(--serif);
+    font-size: 20px;
+    line-height: 1.45;
+    color: var(--ink-soft);
+    max-width: 580px;
+    font-weight: 300;
+    font-variation-settings: "opsz" 144;
+  }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--rule);
+  }
+
+  .hero-stat-num {
+    font-family: var(--serif);
+    font-size: 36px;
+    font-weight: 500;
+    line-height: 1;
+    margin-bottom: 6px;
+    font-variation-settings: "opsz" 144;
+  }
+
+  .hero-stat-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    background: var(--ink);
+    color: var(--bg);
+    padding: 16px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 1000;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.success { background: var(--success); }
+
+  .completion-banner {
+    background: var(--success-soft);
+    border: 1px solid var(--success);
+    padding: 16px 20px;
+    margin-bottom: 32px;
+    font-size: 14px;
+    color: var(--success);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Mobile */
+  @media (max-width: 980px) {
+    .training-wrap { grid-template-columns: 1fr; }
+    .sidebar { position: relative; height: auto; padding: 20px; }
+    .main { padding: 32px 24px 80px; }
+    .module-title { font-size: 36px; }
+    .hero { padding: 32px 24px; }
+    .hero h1 { font-size: 44px; }
+    .hero-stats { grid-template-columns: repeat(2, 1fr); }
+    .module-list { display: grid; grid-template-columns: 1fr 1fr; }
+  }
+</style>
+
+<div class="training-wrap">
+  <aside class="sidebar">
+    <div class="brand">
+      Mastering <span class="accent">Bedrock</span>
+    </div>
+    <div class="brand-sub">An interactive training course</div>
+
+    <div class="progress-panel">
+      <div class="progress-label">Your Progress</div>
+      <div class="progress-stat"><span id="modules-done">0</span><span class="total">/9 modules</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width: 0%"></div></div>
+    </div>
+
+    <div class="module-nav-title">Curriculum</div>
+    <ul class="module-list" id="module-list"></ul>
+  </aside>
+
+  <main class="main" id="main-content"></main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// =================== STATE / STORAGE ===================
+const STORAGE_KEY = 'bedrock_training_v1';
+
+const defaultState = {
+  currentModule: 0,
+  completedModules: [],
+  quizAnswers: {},
+  homeworkDone: [],
+  startedAt: Date.now()
+};
+
+let state = { ...defaultState };
+
+async function loadState() {
+  try {
+    const r = await window.storage.get(STORAGE_KEY);
+    if (r && r.value) {
+      state = { ...defaultState, ...JSON.parse(r.value) };
+    }
+  } catch (e) { /* first visit, no data yet */ }
+}
+
+async function saveState() {
+  try {
+    await window.storage.set(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) { console.error('Save failed', e); }
+}
+
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+// =================== CURRICULUM ===================
+const MODULES = [
+  {
+    id: 0,
+    title: "Welcome & Setup",
+    titleHTML: "Welcome to <span class='italic'>Bedrock</span>",
+    eyebrow: "Module 00 · Orientation",
+    lede: "A structured, hands-on path from foundation model basics to production-grade GenAI applications on AWS.",
+    duration: "15 min",
+    isHero: true
+  },
+  {
+    id: 1,
+    title: "What is Amazon Bedrock?",
+    titleHTML: "What <span class='italic'>is</span> Amazon Bedrock?",
+    eyebrow: "Module 01 · Foundations",
+    lede: "Understand the service: a fully managed gateway to leading foundation models, with no infrastructure to manage.",
+    duration: "30 min"
+  },
+  {
+    id: 2,
+    title: "Foundation Models & the Playground",
+    titleHTML: "Foundation Models <span class='italic'>&</span> the Playground",
+    eyebrow: "Module 02 · Models",
+    lede: "Explore Claude, Nova, Llama, and others. Master the inference parameters that shape model behavior.",
+    duration: "45 min"
+  },
+  {
+    id: 3,
+    title: "Bedrock APIs with Python",
+    titleHTML: "Bedrock APIs <span class='italic'>with</span> Python",
+    eyebrow: "Module 03 · APIs",
+    lede: "Move from console to code. The Converse API, streaming, and the boto3 SDK.",
+    duration: "60 min"
+  },
+  {
+    id: 4,
+    title: "Prompt Engineering",
+    titleHTML: "Prompt <span class='italic'>Engineering</span>",
+    eyebrow: "Module 04 · Craft",
+    lede: "System prompts, multi-turn conversations, and the patterns that separate fragile demos from reliable systems.",
+    duration: "45 min"
+  },
+  {
+    id: 5,
+    title: "RAG & Knowledge Bases",
+    titleHTML: "RAG <span class='italic'>&</span> Knowledge Bases",
+    eyebrow: "Module 05 · Retrieval",
+    lede: "Ground your models in private data. Build retrieval pipelines and use Bedrock Knowledge Bases.",
+    duration: "75 min"
+  },
+  {
+    id: 6,
+    title: "Tool Use & Function Calling",
+    titleHTML: "Tool Use <span class='italic'>&</span> Function Calling",
+    eyebrow: "Module 06 · Actions",
+    lede: "Give models the ability to act. Define tools, parse tool calls, and orchestrate multi-step interactions.",
+    duration: "60 min"
+  },
+  {
+    id: 7,
+    title: "Agents & AgentCore",
+    titleHTML: "Agents <span class='italic'>&</span> AgentCore",
+    eyebrow: "Module 07 · Agents",
+    lede: "Production agent infrastructure: runtime, memory, gateway, identity, observability. The full Bedrock AgentCore stack.",
+    duration: "75 min"
+  },
+  {
+    id: 8,
+    title: "Guardrails & Production",
+    titleHTML: "Guardrails <span class='italic'>&</span> Production",
+    eyebrow: "Module 08 · Operate",
+    lede: "Safety, cost optimization, observability, and the operational practices that make GenAI ready for real users.",
+    duration: "45 min"
+  }
+];
+
+// =================== CONTENT ===================
+function moduleContent(id) {
+  if (id === 0) return moduleHero();
+  if (id === 1) return moduleOne();
+  if (id === 2) return moduleTwo();
+  if (id === 3) return moduleThree();
+  if (id === 4) return moduleFour();
+  if (id === 5) return moduleFive();
+  if (id === 6) return moduleSix();
+  if (id === 7) return moduleSeven();
+  if (id === 8) return moduleEight();
+  return '';
+}
+
+function moduleHero() {
+  return `
+    <section class="hero">
+      <div class="hero-eyebrow">Interactive Training · 2026 Edition</div>
+      <h1>Master Amazon<br>Bedrock <span class="italic">end-to-end</span></h1>
+      <p>From your first API call to building production AI agents. Nine focused modules with embedded videos, knowledge checks, and hands-on assignments you can actually deploy.</p>
+      <div class="hero-stats">
+        <div><div class="hero-stat-num">9</div><div class="hero-stat-label">Modules</div></div>
+        <div><div class="hero-stat-num">~7h</div><div class="hero-stat-label">Total time</div></div>
+        <div><div class="hero-stat-num">8</div><div class="hero-stat-label">Homework labs</div></div>
+        <div><div class="hero-stat-num">24+</div><div class="hero-stat-label">Quiz questions</div></div>
+      </div>
+    </section>
+
+    <div class="section">
+      <div class="section-num">— GETTING STARTED</div>
+      <h2 class="section-title objectives">Before you begin</h2>
+      <div class="prose">
+        <p>This course assumes basic Python familiarity (variables, functions, packages) and a general understanding of HTTP APIs. You don't need prior ML experience — we build that as we go.</p>
+        <p>You'll need an <strong>AWS account</strong> with the ability to access Amazon Bedrock. Most modules' homework can be completed within AWS free-tier limits or for a few dollars of usage.</p>
+      </div>
+      <ul class="objective-list">
+        <li>A working AWS account (root or IAM user)</li>
+        <li>Python 3.10+ installed locally</li>
+        <li>AWS CLI configured with credentials (<code class="inline">aws configure</code>)</li>
+        <li>A code editor (VS Code recommended)</li>
+        <li>~$10 of AWS budget for the full course exercises</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— HOW TO USE</div>
+      <h2 class="section-title concept">The rhythm of each module</h2>
+      <div class="prose">
+        <p>Every module follows the same shape: a brief overview, a curated video walkthrough, the core concepts in plain prose, a short knowledge-check quiz, and a hands-on assignment that produces real working code or AWS resources.</p>
+        <p>Your progress is saved automatically — close this tab and come back anytime. Quizzes can be retaken. Homework is marked complete when you say so.</p>
+      </div>
+    </div>
+  `;
+}
+
+function moduleOne() {
+  return `
+    <div class="section">
+      <div class="section-num">— SECTION 1.1</div>
+      <h2 class="section-title objectives">Learning objectives</h2>
+      <ul class="objective-list">
+        <li>Explain what Amazon Bedrock is and what problem it solves</li>
+        <li>Identify the major model providers available on Bedrock</li>
+        <li>Understand Bedrock's data privacy and security posture</li>
+        <li>Navigate the Bedrock console and request model access</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— SECTION 1.2</div>
+      <h2 class="section-title video">Watch first</h2>
+      <div class="video-meta">
+        <div class="video-title">AWS Bedrock AI Agents Tutorial 2026 — Production Agents</div>
+        <div class="video-info">~25 min · YouTube · 2026</div>
+      </div>
+      <div class="video-wrap">
+        <iframe src="https://www.youtube.com/embed/gzaCk7nafGU" title="AWS Bedrock Tutorial 2026" allowfullscreen></iframe>
+      </div>
+      <p class="prose" style="margin-top:14px;font-size:14px;color:var(--muted);">This video opens a broader AI agents series. The first ~10 minutes give an excellent overview of what Bedrock is and where it fits.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— SECTION 1.3</div>
+      <h2 class="section-title concept">Core concept: the managed gateway model</h2>
+      <div class="prose">
+        <p>Amazon Bedrock is a <strong>fully managed service</strong> that provides unified access to foundation models from leading AI companies through a single API. You don't provision GPUs. You don't manage model servers. You make HTTPS calls and get model responses back.</p>
+        <p>The roster of available providers includes <strong>Anthropic</strong> (Claude family), <strong>Amazon</strong> (Nova models), <strong>Meta</strong> (Llama), <strong>Mistral</strong>, <strong>AI21</strong>, <strong>Cohere</strong>, <strong>Stability AI</strong>, and others. As of 2026, even <strong>OpenAI's frontier models</strong> are available through Bedrock Managed Agents.</p>
+        <p>Three properties matter for production use:</p>
+        <ul>
+          <li><strong>Data privacy:</strong> Your prompts and completions are not used to train the underlying models. Inputs stay yours.</li>
+          <li><strong>Compliance:</strong> HIPAA-eligible, GDPR-aligned, SOC 2, ISO 27001, FedRAMP in GovCloud — the same posture as the rest of AWS.</li>
+          <li><strong>Regional control:</strong> You choose the region; data stays in that region during inference (with cross-region inference as an opt-in feature for capacity).</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— SECTION 1.4</div>
+      <h2 class="section-title concept">What you can build</h2>
+      <div class="prose">
+        <p>Bedrock isn't just "chat in a console." The platform is the foundation for at least four classes of application:</p>
+        <ul>
+          <li><strong>Text generation & summarization</strong> — reports, emails, document summaries, code generation</li>
+          <li><strong>Retrieval-Augmented Generation (RAG)</strong> — chatbots grounded in your private documents, via Bedrock Knowledge Bases</li>
+          <li><strong>Image, video, and audio</strong> — Stability AI and Amazon Nova generate images and video; Nova Sonic does real-time voice</li>
+          <li><strong>Agents</strong> — autonomous workflows that use tools, query systems, and take multi-step actions on behalf of users (we'll go deep on this in Module 7)</li>
+        </ul>
+      </div>
+      <div class="resource-list">
+        <div class="resource-list-title">Official references</div>
+        <ul>
+          <li><a href="https://aws.amazon.com/bedrock/" target="_blank">Amazon Bedrock product page</a></li>
+          <li><a href="https://docs.aws.amazon.com/bedrock/" target="_blank">Bedrock developer guide</a></li>
+          <li><a href="https://aws.amazon.com/bedrock/resources/" target="_blank">Tutorials, workshops, and videos hub</a></li>
+        </ul>
+      </div>
+    </div>
+
+    ${quizSection(1, [
+      {
+        q: "What kind of service is Amazon Bedrock?",
+        opts: [
+          "A managed Kubernetes cluster for AI workloads",
+          "A fully managed service providing API access to foundation models",
+          "A vector database for embedding storage",
+          "A model training framework like SageMaker"
+        ],
+        correct: 1,
+        explain: "Bedrock provides API access to foundation models from multiple providers. You don't manage infrastructure — you just make API calls."
+      },
+      {
+        q: "Which statement about your data on Bedrock is correct?",
+        opts: [
+          "AWS uses your prompts to train future versions of the models",
+          "Your data is shared with the model provider for improvement",
+          "Your prompts and completions are not used to train the underlying models",
+          "Bedrock retains all conversation history indefinitely"
+        ],
+        correct: 2,
+        explain: "Privacy is a core Bedrock guarantee: your inputs are not used to train models, and they aren't shared with the model providers."
+      },
+      {
+        q: "Which of these is NOT something Bedrock natively supports?",
+        opts: [
+          "Generating images with Stability AI models",
+          "Real-time voice with Amazon Nova Sonic",
+          "Calling Anthropic's Claude models",
+          "Managing your own GPU instances directly"
+        ],
+        correct: 3,
+        explain: "Bedrock abstracts away infrastructure entirely. If you want to manage your own GPUs, you'd use EC2 or SageMaker instead."
+      }
+    ])}
+
+    ${homeworkSection(1, {
+      title: "Activate your Bedrock environment",
+      steps: [
+        "Sign in to the AWS Console and navigate to <strong>Amazon Bedrock</strong> in the <strong>us-east-1 (N. Virginia)</strong> region.",
+        "Open <strong>Model access</strong> in the left navigation and click <strong>Modify model access</strong>.",
+        "Request access to at least these three models: <code class='inline'>Anthropic Claude Sonnet 4</code> (or the latest available), <code class='inline'>Amazon Nova Lite</code>, and <code class='inline'>Amazon Nova Pro</code>.",
+        "Submit and wait until status shows <strong>Access granted</strong> for all three (usually instant for Amazon's own models, a few minutes for third parties).",
+        "Install the AWS CLI if you haven't, then run <code class='inline'>aws configure</code> to set credentials. Verify with <code class='inline'>aws sts get-caller-identity</code>.",
+        "Confirm Bedrock CLI access: <code class='inline'>aws bedrock list-foundation-models --region us-east-1</code> should return a list."
+      ],
+      hint: `If a model shows "Access denied" after granting, double-check you're in <strong>us-east-1</strong> — model access is region-specific. Some models require submitting a brief use-case description before AWS grants access. For organization AWS accounts, your admin may need to lift a service-control policy.`
+    })}
+  `;
+}
+
+function moduleTwo() {
+  return `
+    <div class="section">
+      <div class="section-num">— SECTION 2.1</div>
+      <h2 class="section-title objectives">Learning objectives</h2>
+      <ul class="objective-list">
+        <li>Compare the strengths of Claude, Nova, and Llama families</li>
+        <li>Use the Bedrock playground to test prompts interactively</li>
+        <li>Tune inference parameters: temperature, top-p, top-k, max tokens</li>
+        <li>Understand model IDs, inference profiles, and cross-region inference</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— SECTION 2.2</div>
+      <h2 class="section-title concept">The model landscape, briefly</h2>
+      <div class="prose">
+        <p>Choosing a model is part technical, part economic. Three families cover the majority of production use cases:</p>
+        <ul>
+          <li><strong>Anthropic Claude (Opus / Sonnet / Haiku):</strong> Strong reasoning, long context, excellent at tool use and structured outputs. Opus for the hardest problems, Sonnet as the everyday workhorse, Haiku for high-throughput cheap calls.</li>
+          <li><strong>Amazon Nova (Pro / Lite / Micro / Sonic / Canvas / Reel):</strong> Amazon's first-party family. Pro is the flagship reasoning model; Lite is fast and inexpensive; Sonic does real-time speech-to-speech; Canvas generates images; Reel generates short video.</li>
+          <li><strong>Meta Llama:</strong> Open-weight options when you want different cost or licensing characteristics.</li>
+        </ul>
+        <p>Rule of thumb: <strong>start with Claude Sonnet or Nova Pro</strong> while prototyping. Once a workflow is stable, evaluate whether a cheaper, faster model (Haiku, Nova Lite) can do the same job. This swap can drop costs by an order of magnitude.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— SECTION 2.3</div>
+      <h2 class="section-title concept">Inference parameters explained</h2>
+      <div class="prose">
+        <p>Every model exposes knobs that shape its behavior. The four you'll touch most:</p>
+        <ul>
+          <li><strong>Temperature (0.0–1.0):</strong> Controls randomness. <em>0.0</em> = deterministic, same prompt → same answer. <em>1.0</em> = highly creative. For factual extraction use 0.0–0.2. For creative writing use 0.7–1.0.</li>
+          <li><strong>Top-p (nucleus sampling, 0.0–1.0):</strong> Restricts sampling to tokens whose cumulative probability is below <em>p</em>. A safer alternative to high temperature for controlled creativity.</li>
+          <li><strong>Top-k:</strong> Considers only the <em>k</em> most likely next tokens. Lower k = more focused, higher k = more variety.</li>
+          <li><strong>Max tokens:</strong> Caps the response length. Set this thoughtfully — under-cap and outputs get truncated; over-cap and runaway responses cost you money.</li>
+        </ul>
+      </div>
+      <div class="code-block" data-lang="example">// In the playground, try this prompt at temperature 0.1 vs 1.0:
+"List five benefits of exercise. Make them specific and concrete."
+
+// At temp=0.1 you'll get the same predictable five answers each time.
+// At temp=1.0 you'll get fresh phrasings and less-obvious benefits.</div>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— SECTION 2.4</div>
+      <h2 class="section-title concept">Model IDs and inference profiles</h2>
+      <div class="prose">
+        <p>Each model has a stable identifier you'll pass in API calls. Examples:</p>
+        <ul>
+          <li><code class="inline">anthropic.claude-sonnet-4-20250514-v1:0</code></li>
+          <li><code class="inline">amazon.nova-pro-v1:0</code></li>
+          <li><code class="inline">meta.llama3-70b-instruct-v1:0</code></li>
+        </ul>
+        <p>For higher availability, Bedrock offers <strong>inference profiles</strong> — system-defined IDs prefixed with region codes like <code class="inline">us.anthropic.claude-sonnet-4...</code> that route requests across multiple AWS regions for capacity. Use these in production.</p>
+      </div>
+      <div class="resource-list">
+        <div class="resource-list-title">References</div>
+        <ul>
+          <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html" target="_blank">Full list of supported foundation models</a></li>
+          <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/cross-region-inference.html" target="_blank">Cross-region inference profiles</a></li>
+        </ul>
+      </div>
+    </div>
+
+    ${quizSection(2, [
+      {
+        q: "What does the temperature parameter primarily control?",
+        opts: [
+          "The maximum length of the response",
+          "The randomness and creativity of the output",
+          "The cost per token",
+          "Which model provider is selected"
+        ],
+        correct: 1,
+        explain: "Temperature scales the probability distribution over next tokens. Low = focused/deterministic, high = creative/varied."
+      },
+      {
+        q: "You need a chatbot to do high-volume customer FAQ answering. Cost matters more than peak intelligence. What's the best starting choice?",
+        opts: [
+          "Claude Opus (largest, most expensive)",
+          "Claude Haiku or Amazon Nova Lite (fast, inexpensive)",
+          "A custom-trained model from scratch",
+          "Stable Diffusion XL"
+        ],
+        correct: 1,
+        explain: "For high-throughput, cost-sensitive applications, the cheaper/faster tier (Haiku, Nova Lite) usually does the job at a fraction of the price."
+      },
+      {
+        q: "What's the benefit of using an inference profile ID (e.g. 'us.anthropic.claude-...') instead of the base model ID?",
+        opts: [
+          "It uses less context",
+          "It enables cross-region routing for higher availability and capacity",
+          "It costs less",
+          "It enables image generation"
+        ],
+        correct: 1,
+        explain: "Inference profiles let Bedrock route your requests across multiple regions if one is at capacity, dramatically improving production reliability."
+      }
+    ])}
+
+    ${homeworkSection(2, {
+      title: "Playground exploration",
+      steps: [
+        "Open the Bedrock console → <strong>Playgrounds</strong> → <strong>Chat / Text</strong>.",
+        "Pick <code class='inline'>Claude Sonnet 4</code>. Enter this prompt: <em>\"Write three product taglines for a sustainable coffee subscription.\"</em>",
+        "Run it three times at <strong>temperature 0.2</strong>. Note how similar the outputs are.",
+        "Now run it three times at <strong>temperature 0.9</strong>. Note the variation.",
+        "Switch the model to <code class='inline'>Amazon Nova Pro</code> and run the same prompt at temperature 0.7. Compare the style of the outputs vs Claude.",
+        "Try a <strong>structured task</strong> at temperature 0.1: <em>\"Extract the company name, role, and salary from this job posting: [paste any job ad]. Return JSON.\"</em> — observe the precision.",
+        "Document your findings in a short note: which model felt better for which task, and what surprised you about temperature changes."
+      ],
+      hint: `When comparing models for creative work, look at <em>which one writes copy you'd actually use</em>, not just which produces more text. When comparing for structured tasks, look at <em>schema adherence</em> — does it return exactly what you asked for?`
+    })}
+  `;
+}
+
+function moduleThree() {
+  return `
+    <div class="section">
+      <div class="section-num">— SECTION 3.1</div>
+      <h2 class="section-title objectives">Learning objectives</h2>
+      <ul class="objective-list">
+        <li>Make API calls to Bedrock from Python using boto3</li>
+        <li>Use the Converse API for a unified interface across models</li>
+        <li>Implement streaming responses for better UX</li>
+        <li>Handle errors, throttling, and basic retry logic</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— SECTION 3.2</div>
+      <h2 class="section-title concept">Two APIs, one to prefer</h2>
+      <div class="prose">
+        <p>Bedrock exposes two main inference APIs:</p>
+        <ul>
+          <li><strong>InvokeModel</strong> — the original. Each model provider has its own request/response shape, so switching models means rewriting your code.</li>
+          <li><strong>Converse</strong> — the unified API. Same request format across all chat-capable models, plus first-class support for system prompts, multi-turn conversations, tool use, and streaming.</li>
+        </ul>
+        <p><strong>Use Converse unless you have a specific reason not to.</strong> It's where AWS is investing, and switching models becomes a one-line change.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— SECTION 3.3</div>
+      <h2 class="section-title concept">Your first Converse call</h2>
+      <div class="code-block" data-lang="python"><span class="k">import</span> boto3
+
+client <span class="k">=</span> boto3.client(<span class="s">"bedrock-runtime"</span>, region_name=<span class="s">"us-east-1"</span>)
+
+response <span class="k">=</span> client.converse(
+    modelId=<span class="s">"us.anthropic.claude-sonnet-4-20250514-v1:0"</span>,
+    messages=[
+        {
+            <span class="s">"role"</span>: <span class="s">"user"</span>,
+            <span class="s">"content"</span>: [{<span class="s">"text"</span>: <span class="s">"Explain Bedrock in three sentences."</span>}]
+        }
+    ],
+    inferenceConfig={<span class="s">"maxTokens"</span>: 300, <span class="s">"temperature"</span>: 0.3}
+)
+
+print(response[<span class="s">"output"</span>][<span class="s">"message"</span>][<span class="s">"content"</span>][0][<span class="s">"text"</span>])</div>
+      <p class="prose">Notice the structure: messages are a list of <code class="inline">{role, content}</code> objects. Content is always a <em>list</em> of blocks (a single text block here, but blocks can also be images, documents, or tool results in later modules).</p>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— SECTION 3.4</div>
+      <h2 class="section-title concept">Streaming for better UX</h2>
+      <div class="prose">
+        <p>Long responses can take 10–30 seconds. Showing partial output as it generates makes apps feel dramatically faster. Use <code class="inline">converse_stream</code>:</p>
+      </div>
+      <div class="code-block" data-lang="python">response <span class="k">=</span> client.converse_stream(
+    modelId=<span class="s">"us.anthropic.claude-sonnet-4-20250514-v1:0"</span>,
+    messages=[{<span class="s">"role"</span>: <span class="s">"user"</span>, <span class="s">"content"</span>: [{<span class="s">"text"</span>: <span class="s">"Write a haiku about cloud computing."</span>}]}]
+)
+
+<span class="k">for</span> event <span class="k">in</span> response[<span class="s">"stream"</span>]:
+    <span class="k">if</span> <span class="s">"contentBlockDelta"</span> <span class="k">in</span> event:
+        print(event[<span class="s">"contentBlockDelta"</span>][<span class="s">"delta"</span>][<span class="s">"text"</span>], end=<span class="s">""</span>, flush=<span class="n">True</span>)</div>
+      <p class="prose">The stream yields event chunks. The deltas contain the new text — concatenate them as they arrive.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— SECTION 3.5</div>
+      <h2 class="section-title concept">Errors you'll hit, and how to handle them</h2>
+      <div class="prose">
+        <ul>
+          <li><strong>AccessDeniedException</strong> — model access not granted, or wrong region. Re-check the model access page.</li>
+          <li><strong>ThrottlingException</strong> — you've exceeded per-account TPM (tokens per minute) limits. Implement exponential backoff; consider provisioned throughput for predictable load.</li>
+          <li><strong>ValidationException</strong> — usually a bad model ID or malformed message structure. The error message is descriptive.</li>
+          <li><strong>ModelStreamErrorException</strong> — mid-stream failure. Catch it and decide whether to retry or surface partial output.</li>
+        </ul>
+        <p>For production, wrap your calls with <code class="inline">botocore</code>'s built-in retry logic — boto3 retries with exponential backoff by default, but you may want to tune it.</p>
+      </div>
+    </div>
+
+    ${quizSection(3, [
+      {
+        q: "Why prefer the Converse API over InvokeModel?",
+        opts: [
+          "It's faster",
+          "It's free",
+          "It provides a unified interface across model providers, with first-class system prompts and tool use",
+          "It supports more models"
+        ],
+        correct: 2,
+        explain: "Converse normalizes the request/response shape across providers, so switching from Claude to Nova is one config change instead of a rewrite."
+      },
+      {
+        q: "In the Converse API, what is the structure of message content?",
+        opts: [
+          "A single string",
+          "A list of content blocks (text, image, tool_use, etc.)",
+          "A JSON-encoded blob",
+          "An XML document"
+        ],
+        correct: 1,
+        explain: "Content is always a list of typed blocks. Even a simple text message wraps the string in [{\"text\": \"...\"}]."
+      },
+      {
+        q: "What's the main advantage of streaming responses?",
+        opts: [
+          "Lower cost per token",
+          "Better user experience — text appears progressively rather than after the full response is ready",
+          "Higher accuracy",
+          "Required for using guardrails"
+        ],
+        correct: 1,
+        explain: "Streaming is purely about perceived latency and UX. A 20-second response feels usable when text streams in immediately; it feels broken if the screen is blank for 20 seconds."
+      }
+    ])}
+
+    ${homeworkSection(3, {
+      title: "Your first programmatic Bedrock app",
+      steps: [
+        "Create a new Python file <code class='inline'>bedrock_hello.py</code> and a virtual environment. Install boto3: <code class='inline'>pip install boto3</code>.",
+        "Write a script using the Converse API to ask Claude Sonnet: <em>\"Summarize the AWS shared responsibility model in 4 bullet points.\"</em> Print the response.",
+        "Modify the script to use <code class='inline'>converse_stream</code> instead. Print tokens as they arrive, with no buffering.",
+        "Add a <code class='inline'>system</code> parameter to set this system prompt: <em>\"You are a senior AWS architect. Be concise and accurate.\"</em> Re-run and observe how the tone changes.",
+        "Wrap the call in a try/except that catches <code class='inline'>ThrottlingException</code> and <code class='inline'>ValidationException</code> separately, printing a useful message for each.",
+        "Bonus: switch the modelId to <code class='inline'>amazon.nova-pro-v1:0</code> with no other changes. Verify it works — that's the value of Converse."
+      ],
+      hint: `For the system prompt, use the top-level <code class="inline">system=[{"text": "..."}]</code> parameter on <code class="inline">converse()</code> — not a message with role=system. Bedrock has a dedicated system field.`
+    })}
+  `;
+}
+
+function moduleFour() {
+  return `
+    <div class="section">
+      <div class="section-num">— SECTION 4.1</div>
+      <h2 class="section-title objectives">Learning objectives</h2>
+      <ul class="objective-list">
+        <li>Write effective system prompts that produce reliable behavior</li>
+        <li>Implement multi-turn conversation history correctly</li>
+        <li>Apply few-shot prompting and structured output techniques</li>
+        <li>Diagnose and fix common prompt failures</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— SECTION 4.2</div>
+      <h2 class="section-title concept">The system prompt is your contract</h2>
+      <div class="prose">
+        <p>A <strong>system prompt</strong> is a persistent instruction that defines who the model is, what it does, and what it must not do. It applies to every turn of the conversation. Treat it like the contract you'd give a new employee.</p>
+        <p>A weak system prompt: <em>"You are a helpful assistant."</em></p>
+        <p>A strong system prompt names the role, scopes the task, sets the tone, defines failure modes, and specifies output shape:</p>
+      </div>
+      <div class="code-block" data-lang="text">You are a customer support agent for Acme Cloud, a B2B SaaS company.
+
+Your goals:
+- Resolve customer issues using only the information in the knowledge base provided.
+- Be warm, but efficient. Aim for replies under 100 words.
+
+You MUST NOT:
+- Make up policies, prices, or features not in the knowledge base.
+- Make commitments about timelines or refunds.
+- Discuss competitors.
+
+If you cannot answer from the knowledge base, say:
+"I don't have that information — let me connect you with a specialist."
+
+Always end with a clear next step for the customer.</div>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— SECTION 4.3</div>
+      <h2 class="section-title concept">Multi-turn conversations</h2>
+      <div class="prose">
+        <p>Bedrock doesn't remember anything between API calls — it's stateless. To maintain a conversation, <strong>your app holds the history</strong> and sends the full message list each turn.</p>
+      </div>
+      <div class="code-block" data-lang="python">conversation <span class="k">=</span> []
+
+<span class="k">def</span> <span class="n">chat</span>(user_msg):
+    conversation.append({<span class="s">"role"</span>: <span class="s">"user"</span>, <span class="s">"content"</span>: [{<span class="s">"text"</span>: user_msg}]})
+
+    response <span class="k">=</span> client.converse(
+        modelId=MODEL_ID,
+        system=[{<span class="s">"text"</span>: SYSTEM_PROMPT}],
+        messages=conversation,
+        inferenceConfig={<span class="s">"maxTokens"</span>: 500}
+    )
+
+    reply <span class="k">=</span> response[<span class="s">"output"</span>][<span class="s">"message"</span>]
+    conversation.append(reply)  <span class="c"># keep the assistant turn in history</span>
+    <span class="k">return</span> reply[<span class="s">"content"</span>][0][<span class="s">"text"</span>]</div>
+      <p class="prose">Two failure modes to watch for: <strong>history that grows unbounded</strong> (eventually busts the context window and costs spike) and <strong>history that drops the assistant's turns</strong> (the model forgets what it just said).</p>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— SECTION 4.4</div>
+      <h2 class="section-title concept">Few-shot prompting & structured output</h2>
+      <div class="prose">
+        <p>When you need precise behavior, <strong>show, don't just tell</strong>. Embed 2–5 examples directly in the prompt:</p>
+      </div>
+      <div class="code-block" data-lang="text">Classify the sentiment of each review. Output JSON: {"sentiment": "positive"|"negative"|"neutral"}
+
+Review: "The battery dies in 2 hours. Useless."
+Output: {"sentiment": "negative"}
+
+Review: "Works as advertised, nothing special."
+Output: {"sentiment": "neutral"}
+
+Review: "Best purchase this year, life-changing."
+Output: {"sentiment": "positive"}
+
+Review: "{actual_review_to_classify}"
+Output:</div>
+      <p class="prose">For reliable structured output, also consider <strong>Converse's tool-use mechanism</strong> (Module 6) — define a "schema" as a tool and the model returns conforming JSON. More reliable than parsing free-form text.</p>
+    </div>
+
+    ${quizSection(4, [
+      {
+        q: "How does Bedrock handle conversation state between API calls?",
+        opts: [
+          "Bedrock stores conversations server-side, keyed by session ID",
+          "Each call is stateless — your application must send the full history each turn",
+          "The model has automatic memory of recent calls from the same IAM user",
+          "Bedrock saves history in S3 automatically"
+        ],
+        correct: 1,
+        explain: "Bedrock inference is stateless. Multi-turn conversations work because the client sends the accumulated message list each request."
+      },
+      {
+        q: "What's the most reliable way to get JSON-structured output from a model?",
+        opts: [
+          "Use temperature=0 only",
+          "Ask politely in the user message",
+          "Use few-shot examples plus tool-use schema enforcement",
+          "Use a smaller model"
+        ],
+        correct: 2,
+        explain: "Few-shot examples shape the format; tool-use schemas enforce it structurally. Combined, they're far more reliable than prose instructions alone."
+      },
+      {
+        q: "A user reports the chatbot 'forgets' what it said two turns ago. Most likely cause?",
+        opts: [
+          "The model was deprecated",
+          "The application is not appending the assistant's reply back into the message history",
+          "Temperature is too high",
+          "AWS region is misconfigured"
+        ],
+        correct: 1,
+        explain: "If you only append user turns and drop the assistant's responses, the model sees an alternating conversation that's missing half of it. Always echo the assistant's full reply back into the history."
+      }
+    ])}
+
+    ${homeworkSection(4, {
+      title: "Build a personality-driven multi-turn chatbot",
+      steps: [
+        "Create <code class='inline'>chatbot.py</code>. Define a system prompt that gives the bot a clear personality (e.g. \"a grumpy but knowledgeable senior DevOps engineer who answers in 2 sentences max\").",
+        "Implement a CLI loop: read user input, append to history, call <code class='inline'>converse</code>, append assistant response, print it.",
+        "Add a command <code class='inline'>/reset</code> that clears the history but keeps the system prompt.",
+        "Add a command <code class='inline'>/system [text]</code> that lets you change the system prompt mid-session (and resets history).",
+        "Test that the personality stays consistent across at least 5 turns.",
+        "Add token-counting: print the approximate number of input/output tokens after each turn (use <code class='inline'>response['usage']</code>)."
+      ],
+      hint: `<code class="inline">response['usage']</code> gives you <code class="inline">inputTokens</code> and <code class="inline">outputTokens</code> — track these as you go to learn how fast conversation history grows. For long sessions, consider trimming oldest turns when history exceeds a threshold.`
+    })}
+  `;
+}
+
+function moduleFive() {
+  return `
+    <div class="section">
+      <div class="section-num">— SECTION 5.1</div>
+      <h2 class="section-title objectives">Learning objectives</h2>
+      <ul class="objective-list">
+        <li>Explain when RAG is the right architecture vs fine-tuning</li>
+        <li>Understand chunking, embeddings, and vector retrieval</li>
+        <li>Create a Bedrock Knowledge Base from documents in S3</li>
+        <li>Query a Knowledge Base via the RetrieveAndGenerate API</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— SECTION 5.2</div>
+      <h2 class="section-title concept">Why RAG exists</h2>
+      <div class="prose">
+        <p>Foundation models know what was in their training data — and that's it. They don't know your company's policies, your codebase, last quarter's sales numbers, or the email a customer sent yesterday.</p>
+        <p><strong>Retrieval-Augmented Generation</strong> solves this by, at query time, finding the most relevant chunks of your private data and injecting them into the prompt. The model then answers using that context.</p>
+        <p>Compared to <em>fine-tuning</em>, RAG is:</p>
+        <ul>
+          <li><strong>Faster to update</strong> — change a document, the answer changes immediately. No retraining.</li>
+          <li><strong>Cheaper</strong> — no GPU-hours for training, just inference costs.</li>
+          <li><strong>More transparent</strong> — you can show users which documents the answer came from.</li>
+        </ul>
+        <p>Use fine-tuning when you need to change the model's <em>style</em> or <em>capabilities</em>. Use RAG when you need to change what the model <em>knows</em>.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— SECTION 5.3</div>
+      <h2 class="section-title concept">The RAG pipeline</h2>
+      <div class="prose">
+        <p>Every RAG system has the same five stages:</p>
+        <ol>
+          <li><strong>Ingest:</strong> Load documents from a source (S3, SharePoint, websites).</li>
+          <li><strong>Chunk:</strong> Split them into ~200–1000 token chunks. Too small and you lose context; too large and retrieval becomes imprecise.</li>
+          <li><strong>Embed:</strong> Run each chunk through an embedding model (Titan Text Embeddings, Cohere Embed). You get vectors — high-dimensional numerical fingerprints of meaning.</li>
+          <li><strong>Index:</strong> Store the vectors in a vector database (OpenSearch Serverless, Pinecone, pgvector, Aurora) keyed back to the source chunk.</li>
+          <li><strong>Retrieve & generate:</strong> At query time, embed the user's question, find the top-k most similar chunks, stuff them into the prompt, and call the LLM.</li>
+        </ol>
+        <p>You can build all five steps by hand. Or you can use <strong>Bedrock Knowledge Bases</strong>, which manages chunking, embedding, indexing, and retrieval for you. Point it at an S3 bucket, get back an endpoint you can query.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— SECTION 5.4</div>
+      <h2 class="section-title concept">Querying a Knowledge Base</h2>
+      <div class="prose">
+        <p>Once your Knowledge Base is created and synced, querying is one API call:</p>
+      </div>
+      <div class="code-block" data-lang="python">agent_runtime <span class="k">=</span> boto3.client(<span class="s">"bedrock-agent-runtime"</span>, region_name=<span class="s">"us-east-1"</span>)
+
+response <span class="k">=</span> agent_runtime.retrieve_and_generate(
+    input={<span class="s">"text"</span>: <span class="s">"What's our policy on parental leave?"</span>},
+    retrieveAndGenerateConfiguration={
+        <span class="s">"type"</span>: <span class="s">"KNOWLEDGE_BASE"</span>,
+        <span class="s">"knowledgeBaseConfiguration"</span>: {
+            <span class="s">"knowledgeBaseId"</span>: <span class="s">"ABCDE12345"</span>,
+            <span class="s">"modelArn"</span>: <span class="s">"arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-sonnet-4-20250514-v1:0"</span>
+        }
+    }
+)
+
+print(response[<span class="s">"output"</span>][<span class="s">"text"</span>])
+<span class="c"># Citations are in response["citations"] — show them to the user!</span></div>
+      <p class="prose">If you want more control — say, applying re-ranking or filtering before generation — use the lower-level <code class="inline">retrieve</code> call to get chunks, then run your own Converse call.</p>
+      <div class="resource-list">
+        <div class="resource-list-title">References</div>
+        <ul>
+          <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html" target="_blank">Bedrock Knowledge Bases documentation</a></li>
+          <li><a href="https://aws.amazon.com/blogs/machine-learning/category/artificial-intelligence/amazon-bedrock/" target="_blank">AWS Machine Learning Blog (Bedrock category)</a></li>
+        </ul>
+      </div>
+    </div>
+
+    ${quizSection(5, [
+      {
+        q: "When is RAG a better choice than fine-tuning?",
+        opts: [
+          "When you want to change the model's writing style permanently",
+          "When you need the model to incorporate frequently changing, private information",
+          "When you have unlimited GPU budget",
+          "When you want a smaller model"
+        ],
+        correct: 1,
+        explain: "RAG shines when the knowledge changes often (docs, policies, news) and when transparency matters (citations to source). Fine-tuning changes capabilities/style; RAG changes knowledge."
+      },
+      {
+        q: "Which step is NOT part of a RAG pipeline?",
+        opts: [
+          "Chunking documents",
+          "Generating embeddings",
+          "Storing vectors in a vector database",
+          "Retraining the foundation model on user queries"
+        ],
+        correct: 3,
+        explain: "RAG specifically avoids retraining. The foundation model stays unchanged; you add a retrieval layer in front of it."
+      },
+      {
+        q: "What does Bedrock Knowledge Bases manage for you out-of-the-box?",
+        opts: [
+          "User authentication for your chatbot",
+          "Chunking, embedding, vector storage, and retrieval",
+          "Frontend UI",
+          "Cost reporting"
+        ],
+        correct: 1,
+        explain: "Knowledge Bases is a managed RAG pipeline — you provide source data in S3, it handles chunking, embedding (with the model you choose), indexing in OpenSearch Serverless (or another vector store), and retrieval."
+      }
+    ])}
+
+    ${homeworkSection(5, {
+      title: "Build a Knowledge Base over real docs",
+      steps: [
+        "Create an S3 bucket. Upload 3–5 text or PDF files of meaningful content — your team's wiki export, a few AWS docs, a product manual.",
+        "In the Bedrock console, go to <strong>Knowledge bases</strong> → <strong>Create knowledge base</strong>.",
+        "Choose <code class='inline'>Amazon Titan Text Embeddings v2</code> as the embedding model.",
+        "For vector store, let Bedrock create an <strong>Amazon OpenSearch Serverless</strong> collection automatically (simplest path).",
+        "Point it at your S3 bucket. Submit and wait for sync to complete (a few minutes).",
+        "Write a Python script that calls <code class='inline'>retrieve_and_generate</code> with three different questions about your docs.",
+        "Inspect the <code class='inline'>citations</code> in the response and print which source files each answer pulled from.",
+        "Stretch goal: ask a question whose answer is NOT in your docs. Observe what the system does (ideally it admits it doesn't know)."
+      ],
+      hint: `OpenSearch Serverless has a non-trivial minimum cost (~$0.24/hour). If you're cost-sensitive, <strong>delete the collection</strong> when you're done with this exercise. You can also choose a self-managed vector store option if you have one running.`
+    })}
+  `;
+}
+
+function moduleSix() {
+  return `
+    <div class="section">
+      <div class="section-num">— SECTION 6.1</div>
+      <h2 class="section-title objectives">Learning objectives</h2>
+      <ul class="objective-list">
+        <li>Understand the tool-use loop: model → tool call → app executes → result → model</li>
+        <li>Define tool specifications with JSON Schema</li>
+        <li>Implement a multi-tool agent loop in Python</li>
+        <li>Parse tool_use blocks and return tool_result blocks correctly</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— SECTION 6.2</div>
+      <h2 class="section-title concept">What "tool use" actually means</h2>
+      <div class="prose">
+        <p>A foundation model is, by itself, a text generator. It can't check the weather, query your database, or send an email. <strong>Tool use</strong> is the mechanism that bridges this gap: you declare a set of functions the model can <em>ask you to call</em>, and your app runs them.</p>
+        <p>Crucially, the model never executes anything itself. It says <em>"I'd like to call <code class='inline'>get_weather</code> with <code class='inline'>{city: 'Paris'}</code>"</em>. Your code reads that request, runs <code class="inline">get_weather('Paris')</code>, and sends the result back. The model uses the result to formulate its final answer.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— SECTION 6.3</div>
+      <h2 class="section-title concept">Declaring tools</h2>
+      <div class="code-block" data-lang="python">tools <span class="k">=</span> [
+    {
+        <span class="s">"toolSpec"</span>: {
+            <span class="s">"name"</span>: <span class="s">"get_weather"</span>,
+            <span class="s">"description"</span>: <span class="s">"Get current weather for a city. Use when the user asks about weather."</span>,
+            <span class="s">"inputSchema"</span>: {
+                <span class="s">"json"</span>: {
+                    <span class="s">"type"</span>: <span class="s">"object"</span>,
+                    <span class="s">"properties"</span>: {
+                        <span class="s">"city"</span>: {<span class="s">"type"</span>: <span class="s">"string"</span>, <span class="s">"description"</span>: <span class="s">"City name, e.g. Paris"</span>},
+                        <span class="s">"unit"</span>: {<span class="s">"type"</span>: <span class="s">"string"</span>, <span class="s">"enum"</span>: [<span class="s">"celsius"</span>, <span class="s">"fahrenheit"</span>]}
+                    },
+                    <span class="s">"required"</span>: [<span class="s">"city"</span>]
+                }
+            }
+        }
+    }
+]</div>
+      <p class="prose"><strong>The description is the most important field.</strong> The model decides whether to call your tool based largely on this text. Write it like you're documenting a function for a colleague: when to use it, what kind of input, what it returns.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— SECTION 6.4</div>
+      <h2 class="section-title concept">The agent loop</h2>
+      <div class="code-block" data-lang="python">messages <span class="k">=</span> [{<span class="s">"role"</span>: <span class="s">"user"</span>, <span class="s">"content"</span>: [{<span class="s">"text"</span>: <span class="s">"What's the weather in Tokyo?"</span>}]}]
+
+<span class="k">while</span> <span class="n">True</span>:
+    response <span class="k">=</span> client.converse(
+        modelId=MODEL_ID, messages=messages, toolConfig={<span class="s">"tools"</span>: tools}
+    )
+    assistant_msg <span class="k">=</span> response[<span class="s">"output"</span>][<span class="s">"message"</span>]
+    messages.append(assistant_msg)
+
+    <span class="k">if</span> response[<span class="s">"stopReason"</span>] <span class="k">!=</span> <span class="s">"tool_use"</span>:
+        <span class="k">break</span>  <span class="c"># Model is done; final answer is in assistant_msg</span>
+
+    <span class="c"># Find the tool_use block(s) and execute</span>
+    tool_results <span class="k">=</span> []
+    <span class="k">for</span> block <span class="k">in</span> assistant_msg[<span class="s">"content"</span>]:
+        <span class="k">if</span> <span class="s">"toolUse"</span> <span class="k">in</span> block:
+            tu <span class="k">=</span> block[<span class="s">"toolUse"</span>]
+            result <span class="k">=</span> run_tool(tu[<span class="s">"name"</span>], tu[<span class="s">"input"</span>])  <span class="c"># your function</span>
+            tool_results.append({
+                <span class="s">"toolResult"</span>: {
+                    <span class="s">"toolUseId"</span>: tu[<span class="s">"toolUseId"</span>],
+                    <span class="s">"content"</span>: [{<span class="s">"text"</span>: result}]
+                }
+            })
+
+    messages.append({<span class="s">"role"</span>: <span class="s">"user"</span>, <span class="s">"content"</span>: tool_results})</div>
+      <p class="prose">Each iteration: model speaks, app responds with either a final answer (we exit) or tool results (we loop again). A complex task may take several rounds.</p>
+    </div>
+
+    ${quizSection(6, [
+      {
+        q: "When a model 'uses a tool,' what actually happens?",
+        opts: [
+          "The model executes the tool's code on AWS Lambda",
+          "The model emits a structured request asking your app to call the tool, and waits for the result",
+          "The model directly queries the internet",
+          "The tool runs inside the model's GPU"
+        ],
+        correct: 1,
+        explain: "The model never executes anything. It produces a tool_use block; your application is responsible for actually running the function and returning a tool_result."
+      },
+      {
+        q: "What is the most important field on a tool definition for getting the model to use it correctly?",
+        opts: [
+          "The tool name",
+          "The input schema",
+          "The description — it tells the model when and how to use the tool",
+          "The toolUseId"
+        ],
+        correct: 2,
+        explain: "Names and schemas matter, but the description is where you communicate intent — the model reads it to decide whether this tool applies to the current request."
+      },
+      {
+        q: "In a tool-use loop, how do you know when the model is done and ready to give a final answer?",
+        opts: [
+          "When the response contains no tool_use blocks",
+          "When stopReason equals 'end_turn' (not 'tool_use')",
+          "After exactly 3 iterations",
+          "When messages exceeds 10"
+        ],
+        correct: 1,
+        explain: "Inspect response['stopReason']. If it's 'tool_use', execute tools and loop. Any other value (typically 'end_turn') means the model is done."
+      }
+    ])}
+
+    ${homeworkSection(6, {
+      title: "Build a two-tool agent",
+      steps: [
+        "Create <code class='inline'>tool_agent.py</code>. Define two tools: <code class='inline'>get_weather(city)</code> and <code class='inline'>calculator(expression)</code>.",
+        "For <code class='inline'>get_weather</code>, return a hardcoded mock value (no real API needed): <em>\"Currently 18°C and sunny in {city}.\"</em>",
+        "For <code class='inline'>calculator</code>, use Python's <code class='inline'>eval()</code> on simple math expressions (caveat: only for this exercise, never in production).",
+        "Build a Converse-based agent loop that handles tool_use stop reasons and feeds results back.",
+        "Test with: <em>\"What's the weather in Berlin?\"</em> — should invoke get_weather.",
+        "Test with: <em>\"What's 47 * 23 + 100?\"</em> — should invoke calculator.",
+        "Test with: <em>\"What's the weather in Lisbon, and how much is that in Fahrenheit?\"</em> — should invoke both tools in sequence.",
+        "Print every step of the agent loop so you can watch what the model decides to do."
+      ],
+      hint: `If the model never calls your tool, check your tool's description — it's probably too vague. Try: <em>"Use this for any user question about current weather conditions in a specific city."</em> Also make sure you're passing <code class="inline">toolConfig={"tools": tools}</code> to every Converse call inside the loop, not just the first one.`
+    })}
+  `;
+}
+
+function moduleSeven() {
+  return `
+    <div class="section">
+      <div class="section-num">— SECTION 7.1</div>
+      <h2 class="section-title objectives">Learning objectives</h2>
+      <ul class="objective-list">
+        <li>Distinguish hand-rolled agent loops from production agent platforms</li>
+        <li>Understand the seven AgentCore primitives: Runtime, Memory, Gateway, Identity, Code Interpreter, Browser, Observability</li>
+        <li>Deploy your first agent with the AgentCore CLI</li>
+        <li>Choose between code-based agents and the managed harness</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— SECTION 7.2</div>
+      <h2 class="section-title video">Watch first: full AgentCore walkthrough</h2>
+      <div class="video-meta">
+        <div class="video-title">AWS Bedrock AgentCore — The Complete Beginners Guide</div>
+        <div class="video-info">Deep dive · YouTube · March 2026</div>
+      </div>
+      <div class="video-wrap">
+        <iframe src="https://www.youtube.com/embed/y1slHK9R_Vg" title="AWS Bedrock AgentCore Complete Guide" allowfullscreen></iframe>
+      </div>
+      <p class="prose" style="margin-top:14px;font-size:14px;color:var(--muted);">This is the most comprehensive single video on AgentCore as of early 2026. Covers all seven components with hands-on demos. Plan ~45 minutes for the full watch.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— SECTION 7.3</div>
+      <h2 class="section-title concept">From agent loop to agent platform</h2>
+      <div class="prose">
+        <p>In Module 6 you wrote an agent in maybe 40 lines of Python. That's enough for a prototype. It is <em>not</em> enough for production. A real agent needs:</p>
+        <ul>
+          <li><strong>Reliable execution</strong> that scales with traffic and recovers from failures</li>
+          <li><strong>Persistent memory</strong> so users don't restart from scratch every session</li>
+          <li><strong>Secure tool access</strong> to enterprise APIs and databases</li>
+          <li><strong>Identity & permission</strong> so the agent acts on behalf of specific users with appropriate scope</li>
+          <li><strong>Observability</strong> to debug why an agent did what it did, in production</li>
+          <li><strong>Sandboxed execution</strong> for code interpretation and browser automation</li>
+        </ul>
+        <p><strong>Amazon Bedrock AgentCore</strong> is a managed platform that provides exactly these as modular services. You can use them à la carte — there's no monolithic "AgentCore" you have to adopt wholesale.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— SECTION 7.4</div>
+      <h2 class="section-title concept">The seven AgentCore primitives</h2>
+      <div class="prose">
+        <ol>
+          <li><strong>Runtime</strong> — Serverless execution for your agent. Auto-scales, handles concurrent sessions with isolation, streams responses.</li>
+          <li><strong>Memory</strong> — Both <em>short-term</em> (conversation context) and <em>long-term</em> (semantic memory across sessions). Manages what to remember, what to forget.</li>
+          <li><strong>Gateway</strong> — Transforms your existing APIs (Lambda, OpenAPI specs, MCP servers) into agent-callable tools. Handles auth and transformation.</li>
+          <li><strong>Identity</strong> — Inbound auth (who's calling the agent) and outbound auth (what credentials the agent uses to call downstream systems).</li>
+          <li><strong>Code Interpreter</strong> — Secure sandboxed Python execution. The agent can write and run code without it touching your infrastructure.</li>
+          <li><strong>Browser</strong> — Cloud-hosted browser the agent can drive for web automation tasks.</li>
+          <li><strong>Observability</strong> — Tracing every step of an agent run. Critical for debugging non-deterministic systems.</li>
+        </ol>
+        <p>Framework-agnostic: works with <strong>Strands Agents</strong>, <strong>LangGraph</strong>, <strong>CrewAI</strong>, <strong>LlamaIndex</strong>, <strong>Google ADK</strong>, <strong>OpenAI Agents SDK</strong>, or custom code. Model-agnostic too: Claude on Bedrock, GPT on OpenAI, self-hosted Llama — your choice.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— SECTION 7.5</div>
+      <h2 class="section-title concept">Two paths: code-based vs harness</h2>
+      <div class="prose">
+        <p>AgentCore gives you two ways to build:</p>
+        <ul>
+          <li><strong>Code-based (GA):</strong> You write the agent loop in Python using a framework you choose. Maximum control. Deploy via <code class="inline">agentcore deploy</code>.</li>
+          <li><strong>Managed harness (preview):</strong> You declare the agent in config (model + system prompt + tools + memory). AgentCore runs the loop for you. Fastest path to a working agent.</li>
+        </ul>
+        <p>Start with the harness when you want speed. Move to code-based when you need custom orchestration logic.</p>
+      </div>
+      <div class="code-block" data-lang="bash"><span class="c"># Install the CLI</span>
+npm install -g @aws/agentcore
+
+<span class="c"># Scaffold a new agent</span>
+agentcore create --name MyAgent --framework Strands --model-provider Bedrock
+
+<span class="c"># Local dev with hot reload</span>
+cd MyAgent && agentcore dev
+
+<span class="c"># Deploy to AWS</span>
+agentcore deploy
+
+<span class="c"># Invoke remotely</span>
+agentcore invoke "What's our refund policy?"</div>
+      <div class="resource-list">
+        <div class="resource-list-title">References</div>
+        <ul>
+          <li><a href="https://docs.aws.amazon.com/bedrock-agentcore/" target="_blank">AgentCore documentation</a></li>
+          <li><a href="https://aws.amazon.com/bedrock/agentcore/" target="_blank">AgentCore product page</a></li>
+          <li><a href="https://aws.github.io/bedrock-agentcore-starter-toolkit/" target="_blank">AgentCore Starter Toolkit (Python SDK)</a></li>
+        </ul>
+      </div>
+    </div>
+
+    ${quizSection(7, [
+      {
+        q: "Which is NOT one of the AgentCore primitives?",
+        opts: [
+          "Runtime",
+          "Memory",
+          "Gateway",
+          "DataLake"
+        ],
+        correct: 3,
+        explain: "The seven primitives are Runtime, Memory, Gateway, Identity, Code Interpreter, Browser, and Observability. AgentCore intentionally doesn't dictate where your data lives."
+      },
+      {
+        q: "What does AgentCore Gateway do?",
+        opts: [
+          "Provides a load balancer for agent traffic",
+          "Transforms existing APIs (Lambda, OpenAPI, MCP) into agent-callable tools with auth handled for you",
+          "Stores embeddings",
+          "Generates code"
+        ],
+        correct: 1,
+        explain: "Gateway is the bridge between your existing APIs/services and agent tool-use. You point it at a Lambda or OpenAPI spec, it produces an agent-ready tool with auth wired in."
+      },
+      {
+        q: "True or false: AgentCore only works with Bedrock-hosted models and the Strands framework.",
+        opts: [
+          "True",
+          "False — AgentCore is framework-agnostic and model-agnostic; you can use LangGraph, CrewAI, etc., and any model provider"
+        ],
+        correct: 1,
+        explain: "AgentCore was deliberately designed as a platform layer that doesn't lock you into a specific framework or model. It works with whatever you bring."
+      },
+      {
+        q: "You want to ship an agent fast and don't need custom orchestration logic. Which AgentCore path?",
+        opts: [
+          "Code-based with custom Python",
+          "Managed harness — declare the agent in config, AgentCore runs the loop",
+          "Build your own runtime",
+          "Use Lambda directly"
+        ],
+        correct: 1,
+        explain: "The harness is the fastest path: define model + prompt + tools + memory in YAML/JSON, deploy, done. Drop to code-based when you need custom loop logic."
+      }
+    ])}
+
+    ${homeworkSection(7, {
+      title: "Ship your first AgentCore agent",
+      steps: [
+        "Install the AgentCore CLI: <code class='inline'>npm install -g @aws/agentcore</code> (requires Node.js 20+).",
+        "Run <code class='inline'>agentcore create --name HelloAgent</code> and answer the prompts. Choose Strands framework and Bedrock as model provider.",
+        "<code class='inline'>cd HelloAgent</code> and inspect the generated structure: <code class='inline'>app/HelloAgent/main.py</code> is where your agent logic lives.",
+        "Run <code class='inline'>agentcore dev</code> to start the local dev server. Open the agent inspector in your browser and chat with the agent.",
+        "Modify <code class='inline'>main.py</code> to give the agent a specialized system prompt — make it a tutor for a topic you care about.",
+        "Add a simple tool to the agent (e.g., a function returning the current date) and verify the model invokes it correctly.",
+        "Deploy to AWS: <code class='inline'>agentcore deploy</code>. First deploy bootstraps CDK and takes a few minutes.",
+        "Invoke remotely: <code class='inline'>agentcore invoke \"Hello from production\"</code>. Confirm response.",
+        "Stretch: add AgentCore Memory with <code class='inline'>agentcore add memory</code> and verify the agent remembers details across sessions."
+      ],
+      hint: `If <code class="inline">agentcore deploy</code> fails on first run, you usually need to give your IAM identity permission to assume CDK bootstrap roles. The error message will name the missing permission — grant it and retry. Also confirm you're using a region where AgentCore is available (us-east-1, us-east-2, us-west-2, eu-west-1, etc.).`
+    })}
+  `;
+}
+
+function moduleEight() {
+  return `
+    <div class="section">
+      <div class="section-num">— SECTION 8.1</div>
+      <h2 class="section-title objectives">Learning objectives</h2>
+      <ul class="objective-list">
+        <li>Configure Bedrock Guardrails to filter harmful content and protect PII</li>
+        <li>Apply cost optimization techniques: prompt caching, model distillation, intelligent routing</li>
+        <li>Instrument Bedrock applications with logging and tracing</li>
+        <li>Plan for evaluation: how to measure quality before shipping</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— SECTION 8.2</div>
+      <h2 class="section-title concept">Guardrails: not optional in production</h2>
+      <div class="prose">
+        <p><strong>Bedrock Guardrails</strong> are configurable safety policies you attach to your model calls. They evaluate both inputs and outputs against your rules. According to AWS, properly configured guardrails block <strong>up to 88% of harmful content</strong> and reduce hallucinations with <strong>up to 99% accuracy</strong> via Automated Reasoning checks.</p>
+        <p>You can configure:</p>
+        <ul>
+          <li><strong>Content filters</strong> — block hate, insults, sexual content, violence, prompt injection attempts. Tunable strength per category.</li>
+          <li><strong>Denied topics</strong> — define no-go subjects in plain English (e.g., "investment advice", "competitor products").</li>
+          <li><strong>PII detection & redaction</strong> — automatically detect and mask names, addresses, phone numbers, SSNs, credit cards.</li>
+          <li><strong>Word filters</strong> — block specific terms or profanity lists.</li>
+          <li><strong>Contextual grounding</strong> — verify that responses are supported by the source documents in RAG contexts.</li>
+        </ul>
+        <p>Apply a guardrail to any Converse call by passing <code class="inline">guardrailConfig={"guardrailIdentifier": "...", "guardrailVersion": "..."}</code>.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— SECTION 8.3</div>
+      <h2 class="section-title concept">Cost optimization</h2>
+      <div class="prose">
+        <p>Bedrock costs scale with input and output tokens. For a serious application, these levers matter:</p>
+        <ul>
+          <li><strong>Right-size the model.</strong> Don't pay Opus prices for Haiku tasks. Run regular evaluations to confirm your cheap model still passes quality bars.</li>
+          <li><strong>Prompt caching.</strong> When you have a large, stable system prompt or tool spec that's reused across requests, Bedrock can cache the prefix. Subsequent calls reuse the cached tokens at a major discount.</li>
+          <li><strong>Model Distillation.</strong> Take a powerful teacher model's outputs, train a smaller student model to mimic it. AWS reports distilled models run up to <strong>500% faster</strong> and cost <strong>up to 75% less</strong> with minimal accuracy loss.</li>
+          <li><strong>Intelligent Prompt Routing.</strong> Automatically routes each request to the cheapest model that can handle it. Cuts costs by up to 30% while preserving quality.</li>
+          <li><strong>Batch inference.</strong> For non-interactive workloads, use batch — significantly cheaper than real-time inference.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— SECTION 8.4</div>
+      <h2 class="section-title concept">Observability & evaluation</h2>
+      <div class="prose">
+        <p>Bedrock integrates with <strong>CloudWatch</strong> for invocation logs (input, output, tokens, latency), and with <strong>CloudTrail</strong> for API audit. Enable both before any production traffic flows.</p>
+        <p>For evaluation, Bedrock provides <strong>Model Evaluation</strong> jobs: define a dataset of inputs + expected outputs, pick metrics (accuracy, robustness, toxicity), and the service produces a report. Use this whenever you change models or prompts.</p>
+        <p>For agents and more complex flows, <strong>AgentCore Observability</strong> traces every step — useful for debugging why an agent made the choice it made.</p>
+      </div>
+      <div class="resource-list">
+        <div class="resource-list-title">References</div>
+        <ul>
+          <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html" target="_blank">Bedrock Guardrails documentation</a></li>
+          <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/model-evaluation.html" target="_blank">Model Evaluation in Bedrock</a></li>
+          <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html" target="_blank">Prompt caching</a></li>
+        </ul>
+      </div>
+    </div>
+
+    ${quizSection(8, [
+      {
+        q: "Which Bedrock Guardrails capability handles 'don't talk about competitor products'?",
+        opts: [
+          "Content filters",
+          "Denied topics",
+          "Word filters",
+          "PII redaction"
+        ],
+        correct: 1,
+        explain: "Denied topics let you define no-go subjects in plain English. Content filters target harm categories (hate, violence). Word filters target specific terms."
+      },
+      {
+        q: "Your application has a 2000-token system prompt that's identical across millions of requests. Best cost optimization?",
+        opts: [
+          "Trim the system prompt to be shorter",
+          "Enable prompt caching — Bedrock can cache the stable prefix and discount subsequent calls",
+          "Use a more expensive model",
+          "Disable logging"
+        ],
+        correct: 1,
+        explain: "Prompt caching is designed exactly for this scenario. A large stable prefix becomes a major recurring cost; caching turns it into a small one."
+      },
+      {
+        q: "Which technique gives you a smaller, faster, cheaper model that approximates a larger model's behavior?",
+        opts: [
+          "Model Distillation",
+          "Guardrails",
+          "Prompt caching",
+          "Cross-region inference"
+        ],
+        correct: 0,
+        explain: "Distillation trains a smaller 'student' on the outputs of a larger 'teacher' — preserving most of the quality at a fraction of the cost."
+      }
+    ])}
+
+    ${homeworkSection(8, {
+      title: "Production-harden your chatbot",
+      steps: [
+        "In the Bedrock console, go to <strong>Guardrails</strong> → <strong>Create guardrail</strong>.",
+        "Configure: enable all content filter categories at <em>Medium</em> strength; add at least one denied topic (e.g., \"medical diagnosis\"); enable PII redaction for email, phone, and credit card.",
+        "Publish a version of the guardrail and copy the guardrail ID.",
+        "Take the chatbot you built in Module 4. Modify the Converse call to include <code class='inline'>guardrailConfig</code> referencing your new guardrail.",
+        "Test: send a message containing a fake credit card number — verify it gets redacted. Send a denied-topic query — verify the guardrail intercepts.",
+        "Enable Bedrock <strong>model invocation logging</strong> to CloudWatch Logs (one-time setup in Settings).",
+        "Run a few conversations, then check CloudWatch Logs to inspect input/output/token records.",
+        "Stretch: implement a tiny cost dashboard — read your CloudWatch logs and total tokens consumed by model. Multiply by current per-token prices."
+      ],
+      hint: `Per-token prices change. Get current pricing from the <a href="https://aws.amazon.com/bedrock/pricing/" target="_blank">Bedrock pricing page</a>. For a real production cost dashboard, you'd typically push the metrics to QuickSight or another BI tool — which connects beautifully back to your earlier interest in QuickSight.`
+    })}
+
+    <div class="section" style="margin-top:64px;padding:48px 40px;background:var(--accent-soft);border-left:4px solid var(--accent);">
+      <div class="section-num">— COURSE COMPLETE</div>
+      <h2 class="section-title" style="font-size:36px;margin-bottom:16px;">You've finished. What now?</h2>
+      <div class="prose">
+        <p>If you've completed every module and homework, you can now build a complete Bedrock application end-to-end: prompted, retrieval-augmented, tool-using, production-hardened, agent-shaped. Few people in your org can say the same.</p>
+        <p>Recommended next steps:</p>
+        <ul>
+          <li><strong>Ship something real.</strong> Pick a small internal use case (a knowledge-base chatbot for your team docs, a code-review assistant) and put it in front of real users.</li>
+          <li><strong>Go deep on AgentCore.</strong> The seven primitives each reward serious study; the AWS docs have detailed tutorials for each.</li>
+          <li><strong>Pursue certification.</strong> The AWS Certified AI Practitioner and Machine Learning Engineer – Associate exams now cover Bedrock heavily.</li>
+        </ul>
+      </div>
+    </div>
+  `;
+}
+
+// =================== QUIZ & HOMEWORK HELPERS ===================
+function quizSection(moduleId, questions) {
+  const qHTML = questions.map((q, i) => `
+    <div class="quiz-question" data-q="${i}">
+      <div class="quiz-q-num">QUESTION ${String(i + 1).padStart(2, '0')}</div>
+      <div class="quiz-q-text">${q.q}</div>
+      <div class="quiz-options">
+        ${q.opts.map((opt, oi) => `
+          <button class="quiz-option" data-opt="${oi}" data-module="${moduleId}" data-q-idx="${i}">
+            <span class="opt-letter">${String.fromCharCode(65 + oi)}</span>
+            <span>${opt}</span>
+          </button>
+        `).join('')}
+      </div>
+      <div class="quiz-explain" data-explain="${i}">
+        <strong>Explanation</strong>${q.explain}
+      </div>
+    </div>
+  `).join('');
+
+  // store answer key for this module on a script-tag JSON blob? simpler: hide answers in data attrs via global
+  window._quizAnswers = window._quizAnswers || {};
+  window._quizAnswers[moduleId] = questions.map(q => q.correct);
+
+  return `
+    <div class="section">
+      <div class="section-num">— KNOWLEDGE CHECK</div>
+      <h2 class="section-title quiz">Quiz · Module ${moduleId}</h2>
+      <div class="quiz" data-module-quiz="${moduleId}">
+        ${qHTML}
+        <div class="quiz-actions">
+          <div class="quiz-score" id="quiz-score-${moduleId}"></div>
+          <div>
+            <button class="btn btn-ghost btn-small" onclick="resetQuiz(${moduleId})">Retake</button>
+            <button class="btn btn-small" id="quiz-submit-${moduleId}" onclick="submitQuiz(${moduleId})">Submit quiz</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function homeworkSection(moduleId, hw) {
+  return `
+    <div class="section">
+      <div class="section-num">— HANDS-ON</div>
+      <h2 class="section-title homework">Homework · Module ${moduleId}</h2>
+      <div class="homework">
+        <div class="homework-tag">Lab assignment</div>
+        <div class="homework-title">${hw.title}</div>
+        <ol class="homework-steps">
+          ${hw.steps.map(s => `<li>${s}</li>`).join('')}
+        </ol>
+        <details class="homework-hint">
+          <summary>▸ Show troubleshooting hint</summary>
+          <div class="prose"><p>${hw.hint}</p></div>
+        </details>
+        <div class="homework-complete">
+          <button class="btn btn-ghost btn-small" id="hw-btn-${moduleId}" onclick="toggleHomework(${moduleId})">
+            Mark homework complete
+          </button>
+          <span id="hw-status-${moduleId}" style="font-size:13px;color:var(--muted);"></span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// =================== INTERACTIONS ===================
+function renderQuizState(moduleId) {
+  const saved = state.quizAnswers[moduleId];
+  if (!saved) return;
+  const answers = window._quizAnswers[moduleId];
+  saved.selections.forEach((sel, qIdx) => {
+    if (sel === null || sel === undefined) return;
+    const opts = document.querySelectorAll(`.quiz-option[data-module="${moduleId}"][data-q-idx="${qIdx}"]`);
+    opts.forEach((btn, oIdx) => {
+      btn.disabled = saved.submitted;
+      if (oIdx === sel) btn.classList.add('selected');
+      if (saved.submitted) {
+        if (oIdx === answers[qIdx]) btn.classList.add('correct');
+        else if (oIdx === sel && sel !== answers[qIdx]) btn.classList.add('incorrect');
+      }
+    });
+    if (saved.submitted) {
+      document.querySelector(`[data-explain="${qIdx}"]`)?.classList.add('show');
+    }
+  });
+  if (saved.submitted) {
+    const score = saved.selections.filter((s, i) => s === answers[i]).length;
+    const total = answers.length;
+    const scoreEl = document.getElementById(`quiz-score-${moduleId}`);
+    if (scoreEl) {
+      scoreEl.textContent = `Score: ${score} / ${total}`;
+      scoreEl.className = 'quiz-score ' + (score >= Math.ceil(total * 0.7) ? 'pass' : 'fail');
+    }
+  }
+}
+
+window.selectOption = function(moduleId, qIdx, optIdx) {
+  if (!state.quizAnswers[moduleId]) {
+    state.quizAnswers[moduleId] = { selections: [], submitted: false };
+  }
+  if (state.quizAnswers[moduleId].submitted) return;
+  state.quizAnswers[moduleId].selections[qIdx] = optIdx;
+
+  const opts = document.querySelectorAll(`.quiz-option[data-module="${moduleId}"][data-q-idx="${qIdx}"]`);
+  opts.forEach((btn, i) => btn.classList.toggle('selected', i === optIdx));
+};
+
+window.submitQuiz = async function(moduleId) {
+  const saved = state.quizAnswers[moduleId];
+  if (!saved || !saved.selections.length) {
+    showToast('Pick at least one answer first');
+    return;
+  }
+  const answers = window._quizAnswers[moduleId];
+  const allAnswered = answers.every((_, i) => saved.selections[i] !== undefined && saved.selections[i] !== null);
+  if (!allAnswered) {
+    showToast('Answer every question first');
+    return;
+  }
+  saved.submitted = true;
+  const score = saved.selections.filter((s, i) => s === answers[i]).length;
+  saved.score = score;
+  saved.total = answers.length;
+
+  // Auto-complete module if 70%+ and homework done
+  if (score / answers.length >= 0.7 && state.homeworkDone.includes(moduleId)) {
+    if (!state.completedModules.includes(moduleId)) state.completedModules.push(moduleId);
+  }
+
+  await saveState();
+  renderQuizState(moduleId);
+  renderSidebar();
+  showToast(`Quiz scored: ${score}/${answers.length}`, score >= Math.ceil(answers.length * 0.7) ? 'success' : '');
+};
+
+window.resetQuiz = async function(moduleId) {
+  delete state.quizAnswers[moduleId];
+  // Also remove from completed if present
+  state.completedModules = state.completedModules.filter(m => m !== moduleId);
+  await saveState();
+  renderModule(state.currentModule); // re-render whole module
+  renderSidebar();
+};
+
+window.toggleHomework = async function(moduleId) {
+  const idx = state.homeworkDone.indexOf(moduleId);
+  if (idx === -1) {
+    state.homeworkDone.push(moduleId);
+    showToast('Homework marked complete', 'success');
+  } else {
+    state.homeworkDone.splice(idx, 1);
+    state.completedModules = state.completedModules.filter(m => m !== moduleId);
+  }
+  // Auto-complete module if quiz also passed
+  const quiz = state.quizAnswers[moduleId];
+  if (state.homeworkDone.includes(moduleId) && quiz && quiz.submitted && quiz.score / quiz.total >= 0.7) {
+    if (!state.completedModules.includes(moduleId)) state.completedModules.push(moduleId);
+  }
+  await saveState();
+  renderHomeworkState(moduleId);
+  renderSidebar();
+};
+
+function renderHomeworkState(moduleId) {
+  const btn = document.getElementById(`hw-btn-${moduleId}`);
+  const status = document.getElementById(`hw-status-${moduleId}`);
+  if (!btn) return;
+  if (state.homeworkDone.includes(moduleId)) {
+    btn.textContent = '✓ Completed — click to undo';
+    btn.classList.remove('btn-ghost');
+    if (status) status.textContent = 'Saved to your progress';
+  } else {
+    btn.textContent = 'Mark homework complete';
+    btn.classList.add('btn-ghost');
+    if (status) status.textContent = '';
+  }
+}
+
+// Module 0 (welcome) auto-completes when user clicks "Begin"
+window.beginCourse = async function() {
+  if (!state.completedModules.includes(0)) state.completedModules.push(0);
+  state.currentModule = 1;
+  await saveState();
+  renderModule(1);
+  renderSidebar();
+};
+
+// =================== RENDER ===================
+function renderSidebar() {
+  const list = document.getElementById('module-list');
+  list.innerHTML = MODULES.map(m => {
+    const done = state.completedModules.includes(m.id);
+    const active = state.currentModule === m.id;
+    return `
+      <li class="module-item ${active ? 'active' : ''} ${done ? 'complete' : ''}" onclick="goToModule(${m.id})">
+        <span class="module-num">${String(m.id).padStart(2, '0')}</span>
+        <span class="module-label">${m.title}</span>
+        <span class="module-status"></span>
+      </li>
+    `;
+  }).join('');
+
+  const done = state.completedModules.length;
+  document.getElementById('modules-done').textContent = done;
+  document.getElementById('progress-fill').style.width = (done / MODULES.length * 100) + '%';
+}
+
+function renderModule(id) {
+  state.currentModule = id;
+  saveState();
+  const mod = MODULES[id];
+  const main = document.getElementById('main-content');
+
+  const completionBanner = state.completedModules.includes(id) && id !== 0
+    ? `<div class="completion-banner">✓ Module complete — feel free to revisit or move on.</div>`
+    : '';
+
+  const prevMod = id > 0 ? MODULES[id - 1] : null;
+  const nextMod = id < MODULES.length - 1 ? MODULES[id + 1] : null;
+
+  const navHTML = id === 0
+    ? `<div class="nav-buttons">
+         <span></span>
+         <button class="btn" onclick="beginCourse()">Begin the course →</button>
+       </div>`
+    : `<div class="nav-buttons">
+         ${prevMod ? `<button class="nav-btn" onclick="goToModule(${prevMod.id})"><div class="nav-btn-eyebrow">← Module ${String(prevMod.id).padStart(2, '0')}</div><div class="nav-btn-title">${prevMod.title}</div></button>` : '<span></span>'}
+         ${nextMod ? `<button class="nav-btn right" onclick="goToModule(${nextMod.id})"><div class="nav-btn-eyebrow">Module ${String(nextMod.id).padStart(2, '0')} →</div><div class="nav-btn-title">${nextMod.title}</div></button>` : '<span></span>'}
+       </div>`;
+
+  const headerHTML = mod.isHero ? '' : `
+    <div class="module-header">
+      <div class="module-eyebrow">${mod.eyebrow}</div>
+      <h1 class="module-title">${mod.titleHTML}</h1>
+      <p class="module-lede">${mod.lede}</p>
+      <div class="module-meta">
+        <span><strong>${mod.duration}</strong> estimated</span>
+        <span>Knowledge check · <strong>3 questions</strong></span>
+        <span>Hands-on lab · <strong>included</strong></span>
+      </div>
+    </div>
+  `;
+
+  main.innerHTML = completionBanner + headerHTML + moduleContent(id) + navHTML;
+
+  // Re-attach quiz option click handlers (delegated would be cleaner; this works)
+  document.querySelectorAll('.quiz-option').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const moduleId = parseInt(btn.dataset.module);
+      const qIdx = parseInt(btn.dataset.qIdx);
+      const optIdx = parseInt(btn.dataset.opt);
+      window.selectOption(moduleId, qIdx, optIdx);
+    });
+  });
+
+  // Render any saved quiz state
+  if (window._quizAnswers && window._quizAnswers[id]) {
+    renderQuizState(id);
+  }
+  renderHomeworkState(id);
+
+  main.scrollTo?.(0, 0);
+  window.scrollTo(0, 0);
+}
+
+window.goToModule = function(id) {
+  renderModule(id);
+  renderSidebar();
+};
+
+// =================== INIT ===================
+(async function init() {
+  await loadState();
+  renderSidebar();
+  renderModule(state.currentModule || 0);
+})();
+</script>
