@@ -1040,13 +1040,13 @@ function moduleOne() {
       <div class="section-num">— SECTION 1.2</div>
       <h2 class="section-title video">Watch first</h2>
       <div class="video-meta">
-        <div class="video-title">AWS Bedrock AI Agents Tutorial 2026 — Production Agents</div>
-        <div class="video-info">~25 min · YouTube · 2026</div>
+        <div class="video-title">Amazon Bedrock for Beginners — From First Prompt to AI Agent</div>
+        <div class="video-info">~44 min · AWS Developers · April 2026</div>
       </div>
       <div class="video-wrap">
-        <iframe src="https://www.youtube.com/embed/gzaCk7nafGU" title="AWS Bedrock Tutorial 2026" allowfullscreen></iframe>
+        <iframe src="https://www.youtube.com/embed/FAgmR9VV0GQ" title="Amazon Bedrock for Beginners — Full Tutorial" allowfullscreen></iframe>
       </div>
-      <p class="prose" style="margin-top:14px;font-size:14px;color:var(--muted);">This video opens a broader AI agents series. The first ~10 minutes give an excellent overview of what Bedrock is and where it fits.</p>
+      <p class="prose" style="margin-top:14px;font-size:14px;color:var(--muted);">This is the <strong>canonical video for the whole course</strong> — official AWS Developers channel, published April 2026, with a <a href="https://go.aws/4tKvhbr" target="_blank" style="color:var(--accent);">companion GitHub repo</a> of working code. It walks from "what is Bedrock" through Converse, tool use, RAG, guardrails, and agents. For this module, watch the first ~5 minutes (Introduction → What is Bedrock → Choosing the right model). We'll deep-link back to specific timestamped sections from later modules.</p>
     </div>
 
     <div class="section">
@@ -1267,6 +1267,19 @@ function moduleThree() {
         <li>Implement streaming responses for better UX</li>
         <li>Handle errors, throttling, and basic retry logic</li>
       </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— ALSO ON VIDEO</div>
+      <h2 class="section-title video">Watch the Converse API in action</h2>
+      <div class="video-meta">
+        <div class="video-title">Converse API &amp; boto3 — live walkthrough</div>
+        <div class="video-info">~8 min · AWS Developers · timestamp 5:39</div>
+      </div>
+      <div class="video-wrap">
+        <iframe src="https://www.youtube.com/embed/FAgmR9VV0GQ?start=339" title="Converse API walkthrough" allowfullscreen></iframe>
+      </div>
+      <p class="prose" style="margin-top:14px;font-size:14px;color:var(--muted);">Deep-linked to the Converse API + boto3 + messages array section of the main course video. Shows the full structure live: installing boto3, building the request, and reading tokens off the response. Watch this, then the prose below reinforces and extends what you saw.</p>
     </div>
 
     <div class="section">
@@ -1535,6 +1548,19 @@ function moduleFive() {
     </div>
 
     <div class="section">
+      <div class="section-num">— ALSO ON VIDEO</div>
+      <h2 class="section-title video">Watch the RAG walkthrough</h2>
+      <div class="video-meta">
+        <div class="video-title">RAG, vector databases, and Knowledge Bases — live walkthrough</div>
+        <div class="video-info">~9 min · AWS Developers · timestamp 21:06</div>
+      </div>
+      <div class="video-wrap">
+        <iframe src="https://www.youtube.com/embed/FAgmR9VV0GQ?start=1266" title="Bedrock RAG and Knowledge Bases walkthrough" allowfullscreen></iframe>
+      </div>
+      <p class="prose" style="margin-top:14px;font-size:14px;color:var(--muted);">Picks up at semantic search, walks through embeddings and vector databases, then creates a Bedrock Knowledge Base end-to-end. Watch this <em>before</em> the homework — the console steps shown match the lab almost exactly.</p>
+    </div>
+
+    <div class="section">
       <div class="section-num">— SECTION 5.2</div>
       <h2 class="section-title concept">Why RAG exists</h2>
       <div class="prose">
@@ -1661,6 +1687,19 @@ function moduleSix() {
         <li>Implement a multi-tool agent loop in Python</li>
         <li>Parse tool_use blocks and return tool_result blocks correctly</li>
       </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— ALSO ON VIDEO</div>
+      <h2 class="section-title video">Watch tool use in action</h2>
+      <div class="video-meta">
+        <div class="video-title">Tool use — setup and live example</div>
+        <div class="video-info">~7 min · AWS Developers · timestamp 14:19</div>
+      </div>
+      <div class="video-wrap">
+        <iframe src="https://www.youtube.com/embed/FAgmR9VV0GQ?start=859" title="Bedrock tool use walkthrough" allowfullscreen></iframe>
+      </div>
+      <p class="prose" style="margin-top:14px;font-size:14px;color:var(--muted);">A complete tool-use example end-to-end: declaring the tool spec, sending the request, parsing the model's <code class="inline">tool_use</code> response, executing the function, and feeding results back. The pattern shown here is exactly what the homework asks you to implement.</p>
     </div>
 
     <div class="section">
@@ -1876,6 +1915,19 @@ agentcore invoke "What's our refund policy?"</div>
       </div>
     </div>
 
+    <div class="section">
+      <div class="section-num">— ALSO ON VIDEO</div>
+      <h2 class="section-title video">See Strands Agents in action</h2>
+      <div class="video-meta">
+        <div class="video-title">Strands Agents SDK — code walkthrough</div>
+        <div class="video-info">~5 min · AWS Developers · timestamp 38:37</div>
+      </div>
+      <div class="video-wrap">
+        <iframe src="https://www.youtube.com/embed/FAgmR9VV0GQ?start=2317" title="Strands Agents SDK walkthrough" allowfullscreen></iframe>
+      </div>
+      <p class="prose" style="margin-top:14px;font-size:14px;color:var(--muted);">Strands is one of the frameworks AgentCore Runtime supports. This segment shows a complete Strands agent built in roughly 20 lines of Python — useful context before the homework, where you'll scaffold and deploy a Strands agent on AgentCore.</p>
+    </div>
+
     ${quizSection(7, [
       {
         q: "Which is NOT one of the AgentCore primitives?",
@@ -1950,6 +2002,19 @@ function moduleEight() {
         <li>Instrument Bedrock applications with logging and tracing</li>
         <li>Plan for evaluation: how to measure quality before shipping</li>
       </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-num">— ALSO ON VIDEO</div>
+      <h2 class="section-title video">Watch Guardrails configuration</h2>
+      <div class="video-meta">
+        <div class="video-title">Bedrock Guardrails — content filters and creation</div>
+        <div class="video-info">~7 min · AWS Developers · timestamp 30:18</div>
+      </div>
+      <div class="video-wrap">
+        <iframe src="https://www.youtube.com/embed/FAgmR9VV0GQ?start=1818" title="Bedrock Guardrails walkthrough" allowfullscreen></iframe>
+      </div>
+      <p class="prose" style="margin-top:14px;font-size:14px;color:var(--muted);">Walks through the Guardrails console UI: enabling content filter categories, setting strength levels per category, and applying the guardrail to a model call. The path shown here is exactly the one you'll take in the homework lab.</p>
     </div>
 
     <div class="section">
